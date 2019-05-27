@@ -2,11 +2,17 @@ package Telas;
 
 import java.awt.Color;
 import Models.Cliente;
+import Models.Produto;
+import java.awt.Component;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFormattedTextField;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -17,7 +23,8 @@ public class Principal extends javax.swing.JFrame {
     
     public Principal() {
         initComponents();
-        
+        preencherTabelaClientes();
+        desabilitarCamposC();
     }
     
     /*
@@ -42,8 +49,7 @@ public class Principal extends javax.swing.JFrame {
         tbClientes = new javax.swing.JTable();
         lblNomeC = new javax.swing.JLabel();
         txtNomeC = new javax.swing.JTextField();
-        lblData = new javax.swing.JLabel();
-        txtData = new javax.swing.JFormattedTextField();
+        lblIdade = new javax.swing.JLabel();
         txtCep = new javax.swing.JFormattedTextField();
         lblCep = new javax.swing.JLabel();
         lblLogradouro = new javax.swing.JLabel();
@@ -64,6 +70,7 @@ public class Principal extends javax.swing.JFrame {
         btnCancelarC = new javax.swing.JButton();
         lblCodigoC = new javax.swing.JLabel();
         txtCodigoC = new javax.swing.JLabel();
+        txtIdade = new javax.swing.JTextField();
         sideBar = new javax.swing.JPanel();
         lblTitulo = new javax.swing.JLabel();
         lblDesc = new javax.swing.JLabel();
@@ -75,7 +82,7 @@ public class Principal extends javax.swing.JFrame {
         pnlProdutos = new javax.swing.JPanel();
         lblMenuC1 = new javax.swing.JLabel();
         scTbClientes1 = new javax.swing.JScrollPane();
-        tbClientes1 = new javax.swing.JTable();
+        tbProdutos = new javax.swing.JTable();
         lblNomeP = new javax.swing.JLabel();
         txtNomeC1 = new javax.swing.JTextField();
         lblProdutos = new javax.swing.JLabel();
@@ -115,7 +122,7 @@ public class Principal extends javax.swing.JFrame {
         lblMenu.setFont(new java.awt.Font("Ubuntu Mono", 1, 36)); // NOI18N
         lblMenu.setForeground(new java.awt.Color(241, 196, 15));
         lblMenu.setText(">");
-        lblMenu.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblMenu.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         lblMenu.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lblMenuMouseClicked(evt);
@@ -166,7 +173,7 @@ public class Principal extends javax.swing.JFrame {
         lblMenuC.setFont(new java.awt.Font("Ubuntu Mono", 1, 36)); // NOI18N
         lblMenuC.setForeground(new java.awt.Color(241, 196, 15));
         lblMenuC.setText(">");
-        lblMenuC.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblMenuC.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         lblMenuC.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lblMenuMouseClicked(evt);
@@ -180,20 +187,25 @@ public class Principal extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Código", "Nome", "Data de Nascimento"
+                "Código", "Nome", "Idade"
             }
         ));
         tbClientes.setSelectionBackground(new java.awt.Color(71, 71, 71));
         tbClientes.setSelectionForeground(new java.awt.Color(241, 196, 15));
         tbClientes.setShowGrid(false);
+        tbClientes.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                tbClientesMouseReleased(evt);
+            }
+        });
         scTbClientes.setViewportView(tbClientes);
         if (tbClientes.getColumnModel().getColumnCount() > 0) {
             tbClientes.getColumnModel().getColumn(0).setMinWidth(50);
             tbClientes.getColumnModel().getColumn(0).setPreferredWidth(50);
             tbClientes.getColumnModel().getColumn(0).setMaxWidth(50);
-            tbClientes.getColumnModel().getColumn(0).setHeaderValue("Código");
-            tbClientes.getColumnModel().getColumn(1).setHeaderValue("Nome");
-            tbClientes.getColumnModel().getColumn(2).setHeaderValue("Data de Nascimento");
+            tbClientes.getColumnModel().getColumn(1).setMinWidth(200);
+            tbClientes.getColumnModel().getColumn(1).setPreferredWidth(200);
+            tbClientes.getColumnModel().getColumn(1).setMaxWidth(200);
         }
 
         lblNomeC.setFont(new java.awt.Font("Ubuntu", 0, 14)); // NOI18N
@@ -208,21 +220,9 @@ public class Principal extends javax.swing.JFrame {
         txtNomeC.setMinimumSize(new java.awt.Dimension(280, 30));
         txtNomeC.setPreferredSize(new java.awt.Dimension(280, 30));
 
-        lblData.setFont(new java.awt.Font("Ubuntu", 0, 14)); // NOI18N
-        lblData.setForeground(new java.awt.Color(200, 200, 200));
-        lblData.setText("Data de nascimento:");
-
-        txtData.setBackground(new java.awt.Color(71, 71, 71));
-        txtData.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(250, 250, 250)));
-        txtData.setForeground(new java.awt.Color(250, 250, 250));
-        try {
-            txtData.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
-        } catch (java.text.ParseException ex) {
-            ex.printStackTrace();
-        }
-        txtData.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
-        txtData.setMaximumSize(new java.awt.Dimension(280, 30));
-        txtData.setMinimumSize(new java.awt.Dimension(280, 30));
+        lblIdade.setFont(new java.awt.Font("Ubuntu", 0, 14)); // NOI18N
+        lblIdade.setForeground(new java.awt.Color(200, 200, 200));
+        lblIdade.setText("Idade:");
 
         txtCep.setBackground(new java.awt.Color(71, 71, 71));
         txtCep.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(250, 250, 250)));
@@ -308,7 +308,7 @@ public class Principal extends javax.swing.JFrame {
         btnSalvar.setForeground(new java.awt.Color(71, 71, 71));
         btnSalvar.setText("Salvar");
         btnSalvar.setToolTipText("");
-        btnSalvar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnSalvar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnSalvar.setEnabled(false);
         btnSalvar.setFocusPainted(false);
         btnSalvar.setPreferredSize(new java.awt.Dimension(56, 40));
@@ -322,7 +322,7 @@ public class Principal extends javax.swing.JFrame {
         btnCadastrar.setForeground(new java.awt.Color(71, 71, 71));
         btnCadastrar.setText("Cadastrar");
         btnCadastrar.setToolTipText("");
-        btnCadastrar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnCadastrar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnCadastrar.setFocusPainted(false);
         btnCadastrar.setPreferredSize(new java.awt.Dimension(56, 40));
         btnCadastrar.addActionListener(new java.awt.event.ActionListener() {
@@ -335,7 +335,7 @@ public class Principal extends javax.swing.JFrame {
         btnEditar.setForeground(new java.awt.Color(71, 71, 71));
         btnEditar.setText("Editar");
         btnEditar.setToolTipText("");
-        btnEditar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnEditar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnEditar.setFocusPainted(false);
         btnEditar.setPreferredSize(new java.awt.Dimension(56, 40));
         btnEditar.addActionListener(new java.awt.event.ActionListener() {
@@ -348,15 +348,20 @@ public class Principal extends javax.swing.JFrame {
         btnDeletar.setForeground(new java.awt.Color(71, 71, 71));
         btnDeletar.setText("Deletar");
         btnDeletar.setToolTipText("");
-        btnDeletar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnDeletar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnDeletar.setFocusPainted(false);
         btnDeletar.setPreferredSize(new java.awt.Dimension(56, 40));
+        btnDeletar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeletarActionPerformed(evt);
+            }
+        });
 
         btnCancelarC.setBackground(new java.awt.Color(241, 196, 15));
         btnCancelarC.setForeground(new java.awt.Color(71, 71, 71));
         btnCancelarC.setText("Cancelar");
         btnCancelarC.setToolTipText("");
-        btnCancelarC.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnCancelarC.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnCancelarC.setEnabled(false);
         btnCancelarC.setFocusPainted(false);
         btnCancelarC.setPreferredSize(new java.awt.Dimension(56, 40));
@@ -374,6 +379,14 @@ public class Principal extends javax.swing.JFrame {
         txtCodigoC.setForeground(new java.awt.Color(200, 200, 200));
         txtCodigoC.setText("0");
 
+        txtIdade.setBackground(new java.awt.Color(71, 71, 71));
+        txtIdade.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
+        txtIdade.setForeground(new java.awt.Color(250, 250, 250));
+        txtIdade.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(250, 250, 250)));
+        txtIdade.setMaximumSize(new java.awt.Dimension(280, 30));
+        txtIdade.setMinimumSize(new java.awt.Dimension(280, 30));
+        txtIdade.setPreferredSize(new java.awt.Dimension(280, 30));
+
         javax.swing.GroupLayout pnlClientesLayout = new javax.swing.GroupLayout(pnlClientes);
         pnlClientes.setLayout(pnlClientesLayout);
         pnlClientesLayout.setHorizontalGroup(
@@ -389,14 +402,6 @@ public class Principal extends javax.swing.JFrame {
                         .addGroup(pnlClientesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(pnlClientesLayout.createSequentialGroup()
                                 .addGroup(pnlClientesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(pnlClientesLayout.createSequentialGroup()
-                                        .addComponent(lblData)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(lblCep))
-                                    .addGroup(pnlClientesLayout.createSequentialGroup()
-                                        .addComponent(txtData, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(txtCep, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addComponent(lblLogradouro)
                                     .addComponent(txtLogradouro, javax.swing.GroupLayout.PREFERRED_SIZE, 298, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(pnlClientesLayout.createSequentialGroup()
@@ -422,7 +427,15 @@ public class Principal extends javax.swing.JFrame {
                                         .addGap(31, 31, 31)
                                         .addGroup(pnlClientesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(lblNomeC)
-                                            .addComponent(txtNomeC, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                            .addComponent(txtNomeC, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addGroup(pnlClientesLayout.createSequentialGroup()
+                                        .addGroup(pnlClientesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(txtIdade, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(lblIdade))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(pnlClientesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(lblCep)
+                                            .addComponent(txtCep, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE))))
                                 .addGap(18, 18, 18)
                                 .addComponent(scTbClientes, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(pnlClientesLayout.createSequentialGroup()
@@ -458,14 +471,14 @@ public class Principal extends javax.swing.JFrame {
                             .addComponent(txtNomeC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtCodigoC))
                         .addGap(6, 6, 6)
-                        .addGroup(pnlClientesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblData)
+                        .addGroup(pnlClientesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblIdade)
                             .addComponent(lblCep))
                         .addGap(6, 6, 6)
                         .addGroup(pnlClientesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtData, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtIdade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtCep, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(6, 6, 6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblLogradouro)
                         .addGap(6, 6, 6)
                         .addComponent(txtLogradouro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -511,7 +524,7 @@ public class Principal extends javax.swing.JFrame {
         lblEsconder.setFont(new java.awt.Font("Ubuntu Mono", 1, 36)); // NOI18N
         lblEsconder.setForeground(new java.awt.Color(71, 71, 71));
         lblEsconder.setText("<");
-        lblEsconder.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblEsconder.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         lblEsconder.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lblEsconderMouseClicked(evt);
@@ -525,7 +538,6 @@ public class Principal extends javax.swing.JFrame {
         btnClientes.setFocusPainted(false);
         btnClientes.setMaximumSize(new java.awt.Dimension(55, 35));
         btnClientes.setMinimumSize(new java.awt.Dimension(55, 35));
-        btnClientes.setOpaque(true);
         btnClientes.setPreferredSize(new java.awt.Dimension(55, 35));
         btnClientes.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
@@ -548,7 +560,6 @@ public class Principal extends javax.swing.JFrame {
         btnProdutos.setFocusPainted(false);
         btnProdutos.setMaximumSize(new java.awt.Dimension(55, 35));
         btnProdutos.setMinimumSize(new java.awt.Dimension(55, 35));
-        btnProdutos.setOpaque(true);
         btnProdutos.setPreferredSize(new java.awt.Dimension(55, 35));
         btnProdutos.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
@@ -571,7 +582,6 @@ public class Principal extends javax.swing.JFrame {
         btnUsuarios.setFocusPainted(false);
         btnUsuarios.setMaximumSize(new java.awt.Dimension(55, 35));
         btnUsuarios.setMinimumSize(new java.awt.Dimension(55, 35));
-        btnUsuarios.setOpaque(true);
         btnUsuarios.setPreferredSize(new java.awt.Dimension(55, 35));
         btnUsuarios.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
@@ -630,16 +640,16 @@ public class Principal extends javax.swing.JFrame {
         lblMenuC1.setFont(new java.awt.Font("Ubuntu Mono", 1, 36)); // NOI18N
         lblMenuC1.setForeground(new java.awt.Color(241, 196, 15));
         lblMenuC1.setText(">");
-        lblMenuC1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblMenuC1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         lblMenuC1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lblMenuMouseClicked(evt);
             }
         });
 
-        tbClientes1.setBackground(new java.awt.Color(250, 250, 250));
-        tbClientes1.setForeground(new java.awt.Color(71, 71, 71));
-        tbClientes1.setModel(new javax.swing.table.DefaultTableModel(
+        tbProdutos.setBackground(new java.awt.Color(250, 250, 250));
+        tbProdutos.setForeground(new java.awt.Color(71, 71, 71));
+        tbProdutos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -647,14 +657,14 @@ public class Principal extends javax.swing.JFrame {
                 "Código", "Nome", "Preço"
             }
         ));
-        tbClientes1.setSelectionBackground(new java.awt.Color(71, 71, 71));
-        tbClientes1.setSelectionForeground(new java.awt.Color(241, 196, 15));
-        tbClientes1.setShowGrid(false);
-        scTbClientes1.setViewportView(tbClientes1);
-        if (tbClientes1.getColumnModel().getColumnCount() > 0) {
-            tbClientes1.getColumnModel().getColumn(0).setMinWidth(50);
-            tbClientes1.getColumnModel().getColumn(0).setPreferredWidth(50);
-            tbClientes1.getColumnModel().getColumn(0).setMaxWidth(50);
+        tbProdutos.setSelectionBackground(new java.awt.Color(71, 71, 71));
+        tbProdutos.setSelectionForeground(new java.awt.Color(241, 196, 15));
+        tbProdutos.setShowGrid(false);
+        scTbClientes1.setViewportView(tbProdutos);
+        if (tbProdutos.getColumnModel().getColumnCount() > 0) {
+            tbProdutos.getColumnModel().getColumn(0).setMinWidth(50);
+            tbProdutos.getColumnModel().getColumn(0).setPreferredWidth(50);
+            tbProdutos.getColumnModel().getColumn(0).setMaxWidth(50);
         }
 
         lblNomeP.setFont(new java.awt.Font("Ubuntu", 0, 14)); // NOI18N
@@ -678,16 +688,21 @@ public class Principal extends javax.swing.JFrame {
         btnSalvarP.setForeground(new java.awt.Color(71, 71, 71));
         btnSalvarP.setText("Salvar");
         btnSalvarP.setToolTipText("");
-        btnSalvarP.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnSalvarP.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnSalvarP.setEnabled(false);
         btnSalvarP.setFocusPainted(false);
         btnSalvarP.setPreferredSize(new java.awt.Dimension(56, 40));
+        btnSalvarP.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalvarPActionPerformed(evt);
+            }
+        });
 
         btnCadastrarP.setBackground(new java.awt.Color(241, 196, 15));
         btnCadastrarP.setForeground(new java.awt.Color(71, 71, 71));
         btnCadastrarP.setText("Cadastrar");
         btnCadastrarP.setToolTipText("");
-        btnCadastrarP.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnCadastrarP.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnCadastrarP.setFocusPainted(false);
         btnCadastrarP.setPreferredSize(new java.awt.Dimension(56, 40));
         btnCadastrarP.addActionListener(new java.awt.event.ActionListener() {
@@ -700,23 +715,33 @@ public class Principal extends javax.swing.JFrame {
         btnEditarP.setForeground(new java.awt.Color(71, 71, 71));
         btnEditarP.setText("Editar");
         btnEditarP.setToolTipText("");
-        btnEditarP.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnEditarP.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnEditarP.setFocusPainted(false);
         btnEditarP.setPreferredSize(new java.awt.Dimension(56, 40));
+        btnEditarP.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditarPActionPerformed(evt);
+            }
+        });
 
         btnDeletarP.setBackground(new java.awt.Color(241, 196, 15));
         btnDeletarP.setForeground(new java.awt.Color(71, 71, 71));
         btnDeletarP.setText("Deletar");
         btnDeletarP.setToolTipText("");
-        btnDeletarP.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnDeletarP.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnDeletarP.setFocusPainted(false);
         btnDeletarP.setPreferredSize(new java.awt.Dimension(56, 40));
+        btnDeletarP.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeletarPActionPerformed(evt);
+            }
+        });
 
         btnCancelarP.setBackground(new java.awt.Color(241, 196, 15));
         btnCancelarP.setForeground(new java.awt.Color(71, 71, 71));
         btnCancelarP.setText("Cancelar");
         btnCancelarP.setToolTipText("");
-        btnCancelarP.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnCancelarP.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnCancelarP.setEnabled(false);
         btnCancelarP.setFocusPainted(false);
         btnCancelarP.setPreferredSize(new java.awt.Dimension(56, 40));
@@ -1013,7 +1038,14 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_btnProdutosActionPerformed
 
     private void btnCadastrarPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarPActionPerformed
-        
+        btnCadastrarP.setEnabled(false);
+        btnEditarP.setEnabled(false);
+        btnDeletarP.setEnabled(false);
+        btnSalvarP.setEnabled(true);
+        btnCancelarP.setEnabled(true);
+        operacao = 1;
+        limparCamposProduto();
+        habilitarCamposP();
     }//GEN-LAST:event_btnCadastrarPActionPerformed
 
     private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
@@ -1023,17 +1055,72 @@ public class Principal extends javax.swing.JFrame {
         btnSalvar.setEnabled(true);
         btnCancelarC.setEnabled(true);
         operacao = 1;
+        limparCamposCliente();
+        habilitarCamposC();
+        
     }//GEN-LAST:event_btnCadastrarActionPerformed
 
     private void btnCancelarCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarCActionPerformed
         habilitarBotoesC();
+        desabilitarCamposC();
     }//GEN-LAST:event_btnCancelarCActionPerformed
 
+    private void habilitarCamposC(){
+        txtNomeC.setEnabled(true);
+        txtIdade.setEnabled(true);
+        txtCep.setEnabled(true);
+        txtLogradouro.setEnabled(true);
+        txtNumero.setEnabled(true);
+        txtBairro.setEnabled(true);
+        txtCidade.setEnabled(true);
+        txtEstado.setEnabled(true);
+    }
+    
+     private void habilitarCamposP(){
+        txtNomeC1.setEnabled(true);
+        txtDescricao.setEnabled(true);
+        txtAlcoolico.setEnabled(true);
+        txtTeor.setEnabled(true);
+        txtLitragem.setEnabled(true);
+        txtUnidade.setEnabled(true);
+        txtPreco.setEnabled(true);        
+    }
+    
+    private void desabilitarCamposC(){
+        txtNomeC.setEnabled(false);
+        txtIdade.setEnabled(false);
+        txtCep.setEnabled(false);
+        txtLogradouro.setEnabled(false);
+        txtNumero.setEnabled(false);
+        txtBairro.setEnabled(false);
+        txtCidade.setEnabled(false);
+        txtEstado.setEnabled(false);
+    }
+    
+     private void desabilitarCamposP(){
+        txtNomeC1.setEnabled(false);
+        txtDescricao.setEnabled(false);
+        txtAlcoolico.setEnabled(false);
+        txtTeor.setEnabled(false);
+        txtLitragem.setEnabled(false);
+        txtUnidade.setEnabled(false);
+        txtPreco.setEnabled(false);        
+    }
+    
+    
     private void habilitarBotoesC(){
         btnCadastrar.setEnabled(true);
         btnEditar.setEnabled(true);
         btnDeletar.setEnabled(true);
         btnSalvar.setEnabled(false);
+        btnCancelarC.setEnabled(false);
+    }
+    
+     private void habilitarBotoesP(){
+        btnCadastrarP.setEnabled(true);
+        btnEditarP.setEnabled(true);
+        btnDeletarP.setEnabled(true);
+        btnSalvarP.setEnabled(false);
         btnCancelarC.setEnabled(false);
     }
     
@@ -1046,22 +1133,11 @@ public class Principal extends javax.swing.JFrame {
             cliente().alterar();            
             habilitarBotoesC();
         }        
+        preencherTabelaClientes();
     }//GEN-LAST:event_btnSalvarActionPerformed
 
-    private Date pegarData(){
-        
-            SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
-            
-            try {
-                Date data = formato.parse(txtData.getText());
-                formato.format(data);
-                return data;
-            } catch (ParseException ex) {
-                Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            return null;
-    }
     
+  
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
         btnCadastrar.setEnabled(false);
         btnEditar.setEnabled(false);
@@ -1069,7 +1145,47 @@ public class Principal extends javax.swing.JFrame {
         btnSalvar.setEnabled(true);
         btnCancelarC.setEnabled(true);
         operacao = 2;
+        habilitarCamposC();
     }//GEN-LAST:event_btnEditarActionPerformed
+
+    private void tbClientesMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbClientesMouseReleased
+        if(tbClientes.getSelectedRow() != -1){
+            int id = Integer.parseInt(tbClientes.getValueAt(tbClientes.getSelectedRow(),0).toString());
+            preencherCamposC(new Cliente().retornar(id));            
+        }
+    }//GEN-LAST:event_tbClientesMouseReleased
+
+    private void btnDeletarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeletarActionPerformed
+        cliente().deletar();
+        preencherTabelaClientes();
+    }//GEN-LAST:event_btnDeletarActionPerformed
+
+    private void btnSalvarPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarPActionPerformed
+        if(operacao == 1){
+            produto().inserir();            
+            habilitarBotoesP();
+        }
+        else if(operacao == 2){
+            produto().alterar();            
+            habilitarBotoesP();
+        }        
+        preencherTabelaProdutos();
+    }//GEN-LAST:event_btnSalvarPActionPerformed
+
+    private void btnEditarPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarPActionPerformed
+        operacao = 2;
+        btnCadastrarP.setEnabled(false);
+        btnEditarP.setEnabled(false);
+        btnDeletarP.setEnabled(false);
+        btnSalvarP.setEnabled(true);
+        btnCancelarP.setEnabled(true);
+        habilitarCamposP();
+    }//GEN-LAST:event_btnEditarPActionPerformed
+
+    private void btnDeletarPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeletarPActionPerformed
+        produto().deletar();
+        preencherTabelaProdutos();
+    }//GEN-LAST:event_btnDeletarPActionPerformed
    
     public static void main(String args[]) {        
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -1079,18 +1195,97 @@ public class Principal extends javax.swing.JFrame {
         });
     }
     
+    public void limparCamposProduto(){
+        for(Component c: pnlProdutos.getComponents()){
+            if(c instanceof JTextField){
+                ((JTextField) c).setText("");
+            }
+            if(c instanceof JFormattedTextField){
+                ((JFormattedTextField)c).setText("");                
+            }
+            if(c instanceof JTextArea){
+                ((JTextField)c).setText("");
+            }
+        }
+    }
+    
+    public void limparCamposCliente(){
+        for(Component c: pnlClientes.getComponents()){
+            if(c instanceof JTextField){
+                ((JTextField) c).setText("");
+            }
+            if(c instanceof JFormattedTextField){
+                ((JFormattedTextField)c).setText("");                
+            }            
+        }
+    }
+    
     public Cliente cliente(){
-        Cliente cliente = new Cliente(
+        return new Cliente(
             Integer.parseInt(txtCodigoC.getText()),
             txtNomeC.getText(),
-            pegarData(),
+            Integer.parseInt(txtIdade.getText()),
             txtCep.getText(),
             txtLogradouro.getText(),
             Integer.parseInt(txtNumero.getText()),
             txtBairro.getText(),
             txtCidade.getText(),
             (String)txtEstado.getSelectedItem());
-        return cliente;
+        
+    }
+    
+    public Produto produto(){
+        return new Produto(
+            Integer.parseInt(txtCodigoP.getText()),
+            txtNomeC1.getText(),
+            txtDescricao.getText(),
+            (String)txtAlcoolico.getSelectedItem(),
+            Double.parseDouble(txtTeor.getText()),
+            Double.parseDouble(txtLitragem.getText()),
+            (String)txtUnidade.getSelectedItem(),
+            Double.parseDouble(txtPreco.getText()));
+    }
+    
+    public void preencherTabelaClientes(){
+        DefaultTableModel modelo = (DefaultTableModel)tbClientes.getModel();
+        
+        modelo.setRowCount(0);       
+        
+        for(Cliente c: new Cliente().retornarLista()){
+            modelo.addRow(new Object[]{
+                c.getId(),
+                c.getNome(),
+                c.getIdade()
+            });
+        }        
+    }
+    
+    public void preencherTabelaProdutos(){
+        DefaultTableModel modelo = (DefaultTableModel)tbProdutos.getModel();
+        
+        modelo.setRowCount(0);
+        
+        for(Produto p: new Produto().retornarLista()){
+            modelo.addRow(new Object[]{
+                p.getId(),
+                p.getNome(),
+                p.getPreco()
+            });
+        }
+        
+    }
+    
+    private void preencherCamposC(Cliente cliente)
+    {
+        txtCodigoC.setText(Integer.toString(cliente.getId()));
+        txtIdade.setText(Integer.toString(cliente.getIdade()));
+        txtNomeC.setText(cliente.getNome());
+        txtCep.setText(cliente.getCep());
+        txtLogradouro.setText(cliente.getLogradouro());
+        txtNumero.setText(Integer.toString(cliente.getNumero()));
+        txtBairro.setText(cliente.getBairro());
+        txtCidade.setText(cliente.getCidade());
+        txtEstado.setSelectedItem(cliente.getEstado());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1115,12 +1310,12 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JLabel lblClientes;
     private javax.swing.JLabel lblCodigoC;
     private javax.swing.JLabel lblCodigoP;
-    private javax.swing.JLabel lblData;
     private javax.swing.JLabel lblDesc;
     private javax.swing.JLabel lblDesc1;
     private javax.swing.JLabel lblDescricao;
     private javax.swing.JLabel lblEsconder;
     private javax.swing.JLabel lblEstado;
+    private javax.swing.JLabel lblIdade;
     private javax.swing.JLabel lblLitragem;
     private javax.swing.JLabel lblLogradouro;
     private javax.swing.JLabel lblMenu;
@@ -1144,16 +1339,16 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JScrollPane scTbClientes1;
     private javax.swing.JPanel sideBar;
     private javax.swing.JTable tbClientes;
-    private javax.swing.JTable tbClientes1;
+    private javax.swing.JTable tbProdutos;
     private javax.swing.JComboBox<String> txtAlcoolico;
     private javax.swing.JTextField txtBairro;
     private javax.swing.JFormattedTextField txtCep;
     private javax.swing.JTextField txtCidade;
     private javax.swing.JLabel txtCodigoC;
     private javax.swing.JLabel txtCodigoP;
-    private javax.swing.JFormattedTextField txtData;
     private javax.swing.JTextArea txtDescricao;
     private javax.swing.JComboBox<String> txtEstado;
+    private javax.swing.JTextField txtIdade;
     private javax.swing.JTextField txtLitragem;
     private javax.swing.JTextField txtLogradouro;
     private javax.swing.JTextField txtNomeC;

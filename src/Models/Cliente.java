@@ -5,11 +5,12 @@ import DAO.ClienteDAO;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class Cliente {
     
     private int id_cliente;
     private String nome;    
-    private Date data_nascimento;
+    private int idade;
     private String cep;
     private String logradouro;
     private int numero;
@@ -19,12 +20,12 @@ public class Cliente {
     
     public Cliente(){}
     
-    public Cliente(int id, String nome, Date data_nascimento, String cep, 
+    public Cliente(int id, String nome, int idade, String cep, 
             String logradouro, int numero, String bairro, String cidade, String estado){
         
         this.id_cliente = id;
         this.nome = nome;        
-        this.data_nascimento = data_nascimento;
+        this.idade = idade;
         this.cep = cep;
         this.logradouro = logradouro;
         this.numero = numero;
@@ -33,10 +34,10 @@ public class Cliente {
         this.estado = estado;        
     }
     
-    public Cliente(int id, String nome, Date data_nascimento){
+    public Cliente(int id, String nome, int idade){
         this.id_cliente = id;
         this.nome = nome;
-        this.data_nascimento = data_nascimento;
+        this.idade = idade;
     }
 
     public int getId() {
@@ -55,12 +56,12 @@ public class Cliente {
         this.nome = nome;
     }
 
-    public Date getData_nascimento() {
-        return data_nascimento;
+    public int getIdade() {
+        return idade;
     }
 
-    public void setData_nascimento(Date data_nascimento) {
-        this.data_nascimento = data_nascimento;
+    public void setData_nascimento(int idade) {
+        this.idade = idade;
     }
 
     public String getCep() {
@@ -111,13 +112,26 @@ public class Cliente {
         this.estado = estado;
     }
     
-    public void inserir(){
-        ClienteDAO crud = new ClienteDAO();
-        crud.inserir(this);
+    public void inserir(){        
+        new ClienteDAO().inserir(this);
     }
     
     public void alterar(){
-        ClienteDAO crud = new ClienteDAO();
-        crud.alterar(this);
+        
+        new ClienteDAO().alterar(this);
     }    
+    
+    public void deletar(){        
+        new ClienteDAO().deletar(this.getId());
+    }
+    
+    public List<Cliente> retornarLista(){        
+        return new ClienteDAO().retornarLista();        
+    }
+    
+    public Cliente retornar(int id){
+        
+        return new ClienteDAO().retornar(id);
+    }
+            
 }

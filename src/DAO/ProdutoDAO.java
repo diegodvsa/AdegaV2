@@ -1,8 +1,7 @@
-
 package DAO;
 
 import adega.Conexao;
-import Models.Cliente;
+import Models.Produto;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,23 +10,22 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 
-public class ClienteDAO {
+
+public class ProdutoDAO {
     
-    public void inserir(Cliente cliente){
-        String sql = "INSERT INTO cliente " +
-                "(nome, idade, cep, logradouro, numero, bairro, cidade, estado) " +
-                "VALUES (?,?,?,?,?,?,?,?)";
+    public void inserir(Produto produto){
+        String sql = "INSERT INTO produto (nome,descricao,alcoolico,teor,litragem,unidade,preco) " +
+                    "VALUES (?,?,?,?,?,?,?)";
         
         try(Connection con = new Conexao().getConnection();PreparedStatement stmt = con.prepareStatement(sql);){
             
-            stmt.setString(1, cliente.getNome());
-            stmt.setInt(2, cliente.getIdade());
-            stmt.setString(3,cliente.getCep());
-            stmt.setString(4, cliente.getLogradouro());
-            stmt.setInt(5,cliente.getNumero());
-            stmt.setString(6,cliente.getBairro());
-            stmt.setString(7,cliente.getCidade());
-            stmt.setString(8, cliente.getEstado());
+            stmt.setString(1, produto.getNome());
+            stmt.setString(2, produto.getDescricao());
+            stmt.setString(3,produto.getAlcoolico());
+            stmt.setDouble(4, produto.getTeor());
+            stmt.setDouble(5,produto.getLitragem());
+            stmt.setString(6,produto.getUnidade());
+            stmt.setDouble(7,produto.getPreco());         
             
             stmt.execute(); 
             
@@ -39,22 +37,21 @@ public class ClienteDAO {
         }
     }
     
-    public void alterar(Cliente cliente){
-        String sql = "UPDATE cliente SET " +
-                      "nome = ?, idade = ?, cep = ?, logradouro = ?, numero = ?, bairro = ?, cidade = ?, estado = ? " +
-                      "WHERE id_cliente = ?";
+    public void alterar(Produto produto){
+        String sql = "UPDATE produto SET " +
+                      "nome = ?, descricao = ?, alcoolico = ?, teor = ?, litragem = ?, unidade = ?, preco = ? " +
+                      "WHERE id_produto = ?";
         
         try(Connection con = new Conexao().getConnection();PreparedStatement stmt = con.prepareStatement(sql);){
             
-            stmt.setString(1, cliente.getNome());
-            stmt.setInt(2, cliente.getIdade());
-            stmt.setString(3,cliente.getCep());
-            stmt.setString(4, cliente.getLogradouro());
-            stmt.setInt(5,cliente.getNumero());
-            stmt.setString(6,cliente.getBairro());
-            stmt.setString(7,cliente.getCidade());
-            stmt.setString(8, cliente.getEstado());
-            stmt.setInt(9,cliente.getId());
+            stmt.setString(1, produto.getNome());
+            stmt.setString(2, produto.getDescricao());
+            stmt.setString(3,produto.getAlcoolico());
+            stmt.setDouble(4, produto.getTeor());
+            stmt.setDouble(5,produto.getLitragem());
+            stmt.setString(6,produto.getUnidade());
+            stmt.setDouble(7,produto.getPreco()); 
+            stmt.setInt(8,produto.getId());
             
             stmt.execute(); 
             
@@ -67,7 +64,7 @@ public class ClienteDAO {
     }
     
     public void deletar(int id){
-        String sql = "DELETE FROM cliente WHERE id_cliente  = ? ";
+        String sql = "DELETE FROM produto WHERE id_produto  = ? ";
         
         try(Connection con = new Conexao().getConnection();PreparedStatement stmt = con.prepareStatement(sql);)
         {
@@ -83,11 +80,11 @@ public class ClienteDAO {
             JOptionPane.showMessageDialog(null, "Erro ao deletar dados: \n" + ex.getMessage(),"ERRO",JOptionPane.ERROR_MESSAGE);
         }        
     }
-            
-    public List<Cliente> retornarLista(){
-        String sql = "SELECT id_cliente, nome, idade FROM cliente";        
+    
+    public List<Produto> retornarLista(){
+        String sql = "SELECT id_produto, nome, preco FROM produto";        
        
-        List<Cliente> clientes = new ArrayList<>();        
+        List<Produto> produtos = new ArrayList<>();        
         
         try(Connection con = new Conexao().getConnection(); PreparedStatement stmt = con.prepareStatement(sql)){
             
@@ -95,25 +92,25 @@ public class ClienteDAO {
             
                 while(rs.next())
                 {
-                    Cliente cliente = new Cliente(
+                    Produto produto = new Produto(
                             rs.getInt(1),
                             rs.getString(2),
-                            rs.getInt(3)                        
+                            rs.getDouble(3)                        
                     );
-                    clientes.add(cliente);                
+                    produtos.add(produto);                
                 }
             }
             
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Erro ao coletar dados: \n" + ex.getMessage(),"ERRO",JOptionPane.ERROR_MESSAGE);
         }
-        return clientes;
+        return produtos;
     }
     
-    public Cliente retornar(int id){
+    public Produto retornar(int id){
         
-        Cliente cliente = null; 
-        String sql = "SELECT * FROM cliente WHERE id_cliente = ?";
+        Produto produto = null; 
+        String sql = "SELECT * FROM produto WHERE id_produto = ?";
         
         try(Connection con = new Conexao().getConnection(); PreparedStatement stmt = con.prepareStatement(sql);){
                         
@@ -123,16 +120,15 @@ public class ClienteDAO {
                 
                 while(rs.next())
                 {
-                    cliente = new Cliente(
+                    produto = new Produto(
                             rs.getInt(1),
                             rs.getString(2),
-                            rs.getInt(3),
-                            rs.getString(4),
-                            rs.getString(5),
-                            rs.getInt(6),
-                            rs.getString(7),                             
-                            rs.getString(8),
-                            rs.getString(9)
+                            rs.getString(3),
+                            rs.getString(4),                            
+                            rs.getDouble(5),
+                            rs.getDouble(6),                             
+                            rs.getString(7),
+                            rs.getDouble(8)
                     );
                 }
             }
@@ -140,6 +136,6 @@ public class ClienteDAO {
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Erro ao coletar dados: \n" + ex, "ERRO",JOptionPane.ERROR_MESSAGE);
         }
-        return cliente;
+        return produto;
     }
 }

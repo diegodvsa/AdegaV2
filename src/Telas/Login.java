@@ -68,9 +68,8 @@ public class Login extends javax.swing.JFrame {
         btnEntrar.setBackground(new java.awt.Color(241, 196, 15));
         btnEntrar.setForeground(new java.awt.Color(71, 71, 71));
         btnEntrar.setText("Entrar");
-        btnEntrar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnEntrar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnEntrar.setFocusPainted(false);
-        btnEntrar.setOpaque(true);
         btnEntrar.setPreferredSize(new java.awt.Dimension(56, 40));
 
         lblUsuario1.setFont(new java.awt.Font("Ubuntu", 0, 10)); // NOI18N

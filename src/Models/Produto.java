@@ -1,6 +1,11 @@
  
 package Models;
 
+import java.util.Date;
+import DAO.ProdutoDAO;
+import java.util.ArrayList;
+import java.util.List;
+
 public class Produto {
     
     private int id_produto;
@@ -24,6 +29,12 @@ public class Produto {
         this.teor = teor;
         this.litragem = litragem;
         this.unidade = unidade;
+        this.preco = preco;
+    }
+    
+    public Produto(int id, String nome, double preco){
+        this.id_produto = id;
+        this.nome = nome;
         this.preco = preco;
     }
         
@@ -89,5 +100,25 @@ public class Produto {
     
     public void setPreco(double preco){
         this.preco = preco;
+    }
+    
+    public void inserir(){
+        new ProdutoDAO().inserir(this);        
+    }
+    
+    public void alterar(){
+        new ProdutoDAO().alterar(this);
+    }
+    
+    public void deletar(){        
+        new ProdutoDAO().deletar(this.getId());
+    }
+    
+    public List<Produto> retornarLista(){
+        return new ProdutoDAO().retornarLista();
+    }
+    
+    public Produto retornar(int id){
+        return new ProdutoDAO().retornar(id);
     }
 }

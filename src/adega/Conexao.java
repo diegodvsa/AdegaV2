@@ -11,7 +11,7 @@ public class Conexao {
     public Connection getConnection()
     {
         try{
-            Connection conexao = DriverManager.getConnection("jdbc:sqlite:/home/ddevesa/Área de Trabalho/SQLiteStudio/Adega");
+            Connection conexao = DriverManager.getConnection("jdbc:sqlite:Adega.db");
             return conexao;
         }catch(SQLException ex){
             JOptionPane.showMessageDialog(null, "Erro na conexão com a fonte de dados: \n" + ex.getMessage());

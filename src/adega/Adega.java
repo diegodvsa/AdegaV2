@@ -5,18 +5,18 @@
  */
 package adega;
 
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author ddevesa
  */
 public class Adega {
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
         Telas.Login login = new Telas.Login();
         login.setVisible(true);
     }
-    
 }
+    
+
